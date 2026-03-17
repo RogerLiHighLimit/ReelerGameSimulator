@@ -5,3 +5,5 @@
 /.vs
 /ReelerGameSimulator/.vs/ReelerGameSimulator
 /ReelerGameSimulator/ReelerGameSimulator/obj
+/ReelerGameSimulator/obj
+/ReelerGameSimulator/bin/Debug/net8.0
