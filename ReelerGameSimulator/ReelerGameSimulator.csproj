@@ -13,8 +13,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Logic\NewFolder\" />
-  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties data_4gameconfig_1json__JsonSchema="anvil-slot-2.3-game-schema.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

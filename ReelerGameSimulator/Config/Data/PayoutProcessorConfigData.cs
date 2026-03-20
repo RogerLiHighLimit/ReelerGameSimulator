@@ -1,6 +1,6 @@
 ﻿namespace ReelerGameSimulator.Config.Data
 {
-    public class PayoutProcessorConfigData
+    public class PayoutProcessorConfigData 
     {
         public string Name { get; set; } = string.Empty;
         public string PayTable { get; set; } = string.Empty;

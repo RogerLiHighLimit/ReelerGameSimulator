@@ -1,0 +1,994 @@
+{
+  "$id": "anvil-slot-2.3-game-schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "Anvil slot game configuration file",
+
+  "type": "object",
+  "properties": {
+    "Platform": {
+      "description": "",
+      "allOf": [ { "$ref": "#/definitions/PlatformConfig" } ]
+    },
+    "Bet": {
+      "description": "",
+      "allOf": [ { "$ref": "#/definitions/BetConfigData" } ]
+    },
+    "Effects": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/EffectConfigData" }
+    },
+    "Features": {
+      "description": "",
+      "allOf": [ { "$ref": "#/definitions/FeatureConfigData" } ]
+    },
+    "GameStages": {
+      "description": "",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/GameStageConfigData" }
+    },
+    "Gamble": {
+      "description": "",
+      "allOf": [ { "$ref": "#/definitions/GambleConfigData" } ]
+    },
+    "Symbols": {
+      "description": "",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/SymbolConfigData" }
+    },
+    "Displays": {
+      "description": "",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/DisplayConfigData" }
+    },
+    "SymbolSets": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/SymbolSetConfigData" }
+    },
+    "PayoutProcessors": {
+      "description": "This section defines all known built-in payout processors, these are typically referenced from GameStages.",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/PayoutProcessorConfigData" }
+    },
+    "PayTables": {
+      "description": "This section defines all known built-in pay tables, these are typically referenced from PayoutProcessors.",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/PayTableConfigData" }
+    },
+    "Bonus": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/BonusConfig" }
+    },
+    "Achievements": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/AchievementConfigData" }
+    },
+    "PurchaseOptions": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/PurchaseOptionConfigData" }
+    },
+    "Tokens": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/TokenConfigData" }
+    },
+    "InGameProgress": {
+      "description": "",
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/InGameProgressConfigData" }
+    },
+    "LogicStateTypes": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/definitions/LogicStateConfigData" }
+    },
+    "Logic": {
+      "description": "Holds the JSON representation of the logic configuration, for consumption by any custom game logic loaded by the engine."
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Int32": {
+      "type": "integer",
+      "minimum": -2147483648,
+      "maximum": 2147483647
+    },
+    "UInt32": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "Int64": {
+      "type": "integer",
+      "minimum": -9223372036854775808,
+      "maximum": 9223372036854775807
+    },
+    "UInt64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
+
+    "positiveInt32": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "nonZeroPositiveInt32": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "positiveInt64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "nonZeroPositiveInt64": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "stringArrayOrEmpty": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "stringArrayWithEmptyStringsOrEmpty": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0
+    },
+    "distinctStringArray": {
+      "allOf": [
+        { "$ref": "#/definitions/stringArray" },
+        { "uniqueItems": true }
+      ]
+    },
+    "positiveInt32Array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/positiveInt32"
+      }
+    },
+    "arrayOfpositiveInt32Array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/positiveInt32Array"
+      }
+    },
+    "arrayOfpositiveInt32ArrayOrEmpty": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "#/definitions/positiveInt32Array"
+      }
+    },
+
+    "positiveInt64Array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/positiveInt64"
+      }
+    },
+
+    "UInt64Array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/UInt64"
+      }
+    },
+
+    "modeItemArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/definitions/Int32"
+        }
+      }
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonZeroDecimal": {
+      "type": "number",
+      "exclusiveMinimum": false,
+      "minimum": 1
+    },
+    "nonNegativeDecimal": {
+      "type": "number",
+      "exclusiveMinimum": false,
+      "minimum": 0
+    },
+
+
+    "AchievementType": {
+      "type": "string",
+      "enum": [ "Manual", "Group", "PayTable" ]
+    },
+    "BetProfileType": {
+      "type": "string",
+      "enum": [ "FixedPayline", "FixedPaylineCost", "Payline", "Ways" ]
+    },
+    "ClientVisibility": {
+      "type": "string",
+      "enum": [ "Visible", "RefreshOnly", "Hidden" ]
+    },
+    "ResetPeriod": {
+      "type": "string",
+      "enum": [ "OnEvent", "OnTransaction", "Manual" ]
+    },
+    "DisplayMappingFlags": {
+      "type": "string",
+      "enum": [ "Default", "ReverseCollapse", "ReverseCollapseDirection", "ReverseCollapseNewSymbols", "AnchorSymbolsToEnd" ]
+    },
+    "CollapseMode": {
+      "type": "string",
+      "enum": [ "Disabled", "ExistingPosition", "Random" ]
+    },
+    "DisplayConfigFlags": {
+      "type": "string",
+      "enum": [ "None", "DisableTestDataDensitySeedValidation" ]
+    },
+    "EffectType": {
+      "type": "string",
+      "enum": [ "AddFreeSpins", "AwardBonusGame", "EnqueueStage", "ExecuteMethod", "AwardProgressiveJackpot" ]
+    },
+    "PayoutProcessorConfigFlags": {
+      "type": "string",
+      "enum": [ "None", "Custom" ]
+    },
+    "PayoutType": {
+      "type": "string",
+      "enum": [ "BaseBet", "Exact", "Explicit", "TotalBet" ]
+    },
+    "PayTableDirection": {
+      "type": "string",
+      "enum": [ "Anywhere", "Either", "LTR", "RTL" ]
+    },
+    "PayTableSortMode": {
+      "type": "string",
+      "enum": [ "Explicit", "HighestPayout", "LengthThenPayout" ]
+    },
+    "PayTableType": {
+      "type": "string",
+      "enum": [ "Payline", "Ways", "Scatter", "Cluster" ]
+    },
+    "PurchaseOptionsFlags": {
+      "type": "string",
+      "enum": [ "None", "AllowCostModification", "IgnoreMaxPurchaseBet", "RemoveSpinResults", "RemoveWinResults" ]
+    },
+    "SelectionMode": {
+      "type": "string",
+      "enum": [ "Manual", "Random", "Weighted" ]
+    },
+    "SlotGameState": {
+      "type": "string",
+      "enum": [ "BaseGame", "Bonus", "FreeSpin" ]
+    },
+    "SymbolFlags": {
+      "type": "string",
+      "enum": [ "None", "Scatter", "Wild", "WildScatter", "WildSubstitutable" ]
+    },
+    "SymbolMultiplierMode": {
+      "description": "Describes the behaviour that will be used when processing the payout calculations using the multiplier value.",
+      "type": "string",
+      "enum": [ "Additive", "GroupAdditive", "Multiplicative", "Highest" ]
+    },
+    "SymbolSetType": {
+      "type": "string",
+      "enum": [ "Probability", "ReelStrip", "WeightedReelStrip" ]
+    },
+    "WaysFlags": {
+      "type": "string",
+      "enum": [ "ExcludeWildWays" ]
+    },
+
+    "ProgressiveContributionScalingMode": {
+      "type": "string",
+      "enum": [ "Fixed", "ChipSize" ]
+    },
+
+    "AchievementConfigData": {
+      "type": "object",
+      "required": [ "Type", "Name", "MaxValue" ],
+      "additionalItems": false,
+      "additionalProperties": true,
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Type": { "$ref": "#/definitions/AchievementType" },
+        "MaxValue": { "$ref": "#/definitions/positiveInt32" },
+        "ServerSideAchievements": {
+          "type": "array",
+          "minItems": 0,
+          "items": { "$ref": "#/definitions/ServerSideAchievementConfigData" }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [ "Data" ],
+          "properties": {
+            "Data": { "$ref": "#/definitions/PayTableAchievementConfigData" }
+          }
+        },
+        {
+          "required": [ "Data" ],
+          "properties": {
+            "Data": { "$ref": "#/definitions/AchievementConfigDataGroup" }
+          }
+        },
+        {
+          "not": { "required": [ "Data" ] },
+          "properties": {
+          }
+        }
+      ]
+    },
+    "AchievementConfigDataGroup": {
+      "type": "object",
+      "required": [ "Achievements" ],
+      "additionalProperties": false,
+      "additionalItems": false,
+      "properties": {
+        "Achievements": { "$ref": "#/definitions/positiveInt32Array" }
+      }
+    },
+    "PayTableAchievementConfigData": {
+      "type": "object",
+      "required": [ "Id" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" },
+        "AllowWilds": { "type": "boolean" },
+        "Stages": { "$ref": "#/definitions/distinctStringArray" }
+      }
+    },
+    "ServerSideAchievementConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Id", "Threshold" ],
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" },
+        "Threshold": { "$ref": "#/definitions/positiveInt32" }
+      }
+    },
+
+    "AddFreeSpinsEffectData": {
+      "type": "object",
+      "properties": {
+        "Stage": { "$ref": "#/definitions/nonEmptyString" },
+        "Amount": { "$ref": "#/definitions/nonZeroPositiveInt32" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Stage", "Amount" ]
+    },
+    "AwardBonusGameEffectData": {
+      "type": "object",
+      "properties": {
+        "Stage": { "$ref": "#/definitions/nonEmptyString" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Stage" ]
+    },
+    "AwardProgressiveJackpotEffectData": {
+      "type": "object",
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" }
+      }
+    },
+    "EnqueueStageEffectData": {
+      "type": "object",
+      "properties": {
+        "Stage": { "$ref": "#/definitions/nonEmptyString" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Stage" ]
+    },
+    "ExecuteMethodEffectData": {
+      "type": "object",
+      "properties": {
+        "Method": { "$ref": "#/definitions/nonEmptyString" },
+        "Data": { "$ref": "#/definitions/stringArrayOrEmpty" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Method" ]
+    },
+
+    "BetConfigData": {
+      "type": "object",
+      "required": [ "ProfileType" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "ProfileType": { "$ref": "#/definitions/BetProfileType" },
+        "Multiplier": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "NumPaylines": { "$ref": "#/definitions/nonZeroPositiveInt32" }
+      }
+    },
+    "DisplayConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Name", "SymbolSets" ],
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Columns": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "Rows": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "SymbolSets": { "$ref": "#/definitions/stringArray" },
+        "Mapping": {
+          "type": "array",
+          "minItems": 0,
+          "items": { "$ref": "#/definitions/positiveInt32Array" }
+        },
+        "HiddenIndexes": { "$ref": "#/definitions/positiveInt32Array" },
+        "DensityTable": { "$ref": "#/definitions/DisplayDensityTableConfigData" },
+        "MappingFlags": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "$ref": "#/definitions/DisplayMappingFlags"
+            }
+          }
+        },
+        "Flags": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/DisplayConfigFlags" }
+        }
+      }
+    },
+    "DisplayDensityTableConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Densities", "Weights" ],
+      "properties": {
+        "Densities": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/positiveInt32Array" }
+        },
+        "Weights": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/UInt64Array" }
+        }
+      }
+    },
+    "EffectConfigData": {
+      "type": "object",
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Type": { "$ref": "#/definitions/EffectType" },
+        "Data": {
+          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/EnqueueStageEffectData"
+            },
+            {
+              "$ref": "#/definitions/AddFreeSpinsEffectData"
+            },
+            {
+              "$ref": "#/definitions/AwardBonusGameEffectData"
+            },
+            {
+              "$ref": "#/definitions/ExecuteMethodEffectData"
+            },
+            {
+              "$ref": "#/definitions/AwardProgressiveJackpotEffectData"
+            }
+          ]
+        }
+      },
+      "required": [ "Name", "Type", "Data" ],
+      "additionalItems": false,
+      "additionalProperties": false
+    },
+    "FeatureConfigData": {
+      "type": "object",
+      "properties": {
+        "EnablePurchase": { "type": "boolean" },
+        "EnablePersistenceProtection": { "type": "boolean" },
+        "IsEngineOnly": { "type": "boolean" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false
+    },
+    "GambleConfigData": {
+      "type": "object",
+      "properties": {
+        "EnableColour": { "type": "boolean" },
+        "EnableSuit": { "type": "boolean" },
+        "MaxAttempts": { "$ref": "#/definitions/positiveInt32" },
+        "MaxHistoryItems": { "$ref": "#/definitions/positiveInt32" }
+      },
+      "additionalItems": false,
+      "additionalProperties": false
+    },
+    "GameStageBonusConfigData": {
+      "type": "object",
+      "required": [ "Name" ],
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "ExtraData": { "$ref": "#/definitions/nonEmptyString" }
+      }
+    },
+    "GameStageConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Name", "State", "Priority" ],
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Group": { "$ref": "#/definitions/nonEmptyString" },
+        "State": { "$ref": "#/definitions/SlotGameState" },
+        "LogicStateType": { "$ref": "#/definitions/nonEmptyString" },
+        "Priority": { "$ref": "#/definitions/positiveInt32" },
+        "Slot": { "$ref": "#/definitions/GameStageSlotConfigData" },
+        "Bonus": { "$ref": "#/definitions/GameStageBonusConfigData" }
+      },
+      "anyOf": [
+        {
+          "required": [ "Slot" ],
+          "not": { "required": [ "Bonus" ] }
+        },
+        {
+          "required": [ "Bonus" ],
+          "not": { "required": [ "Slot" ] }
+        }
+      ]
+    },
+    "GameStageSlotConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Displays", "DisplaySelectionMode", "DefaultDisplay", "DefaultDisplayResult", "PayoutProcessor" ],
+      "properties": {
+        "Displays": { "$ref": "#/definitions/stringArray" },
+        "DisplayWeights": { "$ref": "#/definitions/UInt64Array" },
+        "DisplaySelectionMode": { "$ref": "#/definitions/SelectionMode" },
+        "DefaultDisplay": { "$ref": "#/definitions/nonEmptyString" },
+        "DefaultDisplayResult": { "$ref": "#/definitions/stringArrayWithEmptyStringsOrEmpty" },
+        "PayoutProcessor": { "$ref": "#/definitions/nonEmptyString" },
+        "Columns": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "Rows": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "Mapping": {
+          "type": "array",
+          "minItems": 0,
+          "items": { "$ref": "#/definitions/positiveInt32Array" }
+        },
+        "HiddenIndexes": { "$ref": "#/definitions/positiveInt32Array" },
+        "DensityTable": { "$ref": "#/definitions/DisplayDensityTableConfigData" },
+        "MappingFlags": {
+          "description": "An array of display mapping flags to assign to each entry in the Mapping.",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "$ref": "#/definitions/DisplayMappingFlags"
+            }
+          }
+        },
+        "ModeItems": { "$ref": "#/definitions/modeItemArray" }
+      }
+    },
+    "InGameProgressConfigData": {
+      "type": "object",
+      "required": [ "Name", "Reset" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Visibility": { "$ref": "#/definitions/ClientVisibility" },
+        "DefaultValue": { "type": "string" },
+        "ShowDefaultValue": { "type": "boolean" },
+        "Reset": { "$ref": "#/definitions/ResetPeriod" },
+        "Tags": {
+          "description": "List of string tags that can be associated with a token for group resets.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "LogicStateConfigData": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [ "Type" ],
+      "properties": {
+        "Type": { "$ref": "#/definitions/nonEmptyString" }
+      }
+    },
+    "PayoutProcessorConfigData": {
+      "type": "object",
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "Name": {
+          "description": "Defines the unique name for the payout processor.",
+          "allOf": [ { "$ref": "#/definitions/nonEmptyString" } ]
+        },
+        "PayTable": {
+          "description": "Defines the configured PayTable that will be used by this payout processor.",
+          "allOf": [ { "$ref": "#/definitions/nonEmptyString" } ]
+        },
+        "Lines": {
+          "description": "Defines the definition for the pay lines to be used for processing payouts. Each entry in the array defines a single pay line, and each pay line is made up of addressable indexes on the display.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/positiveInt32Array" }
+        },
+        "WaysIndexes": {
+          "description": "Defines the list of display positions that are valid for processing ways payouts.",
+          "allOf": [ { "$ref": "#/definitions/positiveInt32Array" } ]
+        },
+        "ScatterIndexes": {
+          "description": "Defines the list of display positions that are valid for processing scatter payouts.",
+          "allOf": [ { "$ref": "#/definitions/positiveInt32Array" } ]
+        },
+        "Flags": {
+          "description": "An array of flag values that describes the payout processor's behaviour.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/PayoutProcessorConfigFlags" }
+        },
+        "WaysFlags": {
+          "description": "An array of flag values that describes the payout processor's behaviour.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/WaysFlags" }
+        }
+      }
+    },
+    "PayTableConfigData": {
+      "type": "object",
+      "required": [ "Groups", "Name" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "Name": {
+          "description": "A unique name for the pay table, used in the PayoutProcessors configuration.",
+          "allOf": [ { "$ref": "#/definitions/nonEmptyString" } ]
+        },
+        "Groups": {
+          "type": "array",
+          "description": "Defines collections of pay table groups containing pay table entries that will be evaluated during payout analysis.",
+          "items": { "$ref": "#/definitions/PayTableGroupConfigData" }
+        }
+      }
+    },
+    "PayTableEntryConfigData": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "Unique identifier for a pay table entry",
+          "allOf": [ { "$ref": "#/definitions/positiveInt32" } ]
+        },
+        "Name": {
+          "description": "Display name for this pay table entry, if all symbols are homogenous this is optional and the engine will generate a value.",
+          "allOf": [ { "$ref": "#/definitions/nonEmptyString" } ]
+        },
+        "Symbols": {
+          "description": "An array of Symbol names that must be matched to award this entry. Mutually exclusive with Symbol and Count values.",
+          "allOf": [ { "$ref": "#/definitions/stringArray" } ]
+        },
+        "Symbol": {
+          "description": "\"The symbol that must be matched to award this entry. This is used with the Count property to complete the configuration. Mutually exclusive with Symbols property.",
+          "allOf": [ { "$ref": "#/definitions/nonEmptyString" } ]
+        },
+        "Count": {
+          "description": "The number of Symbol items that much be matched to award this entry. This is used with the Symbol property to complete the configuration. Mutually exclusive with Symbols property.",
+          "allOf": [ { "$ref": "#/definitions/nonZeroPositiveInt32" } ]
+        },
+        "Payout": {
+          "description": "The base value to be awarded to the player when this entry is matched. This is used in conjunction with the Payout value to determine the final amount.",
+          "allOf": [ { "$ref": "#/definitions/nonNegativeDecimal" } ]
+        },
+        "PayoutType": {
+          "description": "An override of the default PayoutType set for the pay table group.",
+          "allOf": [ { "$ref": "#/definitions/PayoutType" } ]
+        },
+        "MinNative": {
+          "description": "The number of symbols that must be non-wild to award this entry. Defaults to 0.",
+          "allOf": [ { "$ref": "#/definitions/positiveInt32" } ]
+        },
+        "Collapse": {
+          "description": "Determines whether the matched symbols for this entry will participate in collapse processing.",
+          "type": "boolean"
+        },
+        "Effects": {
+          "description": "An array of Effect names which will be triggered upon award of this entry.",
+          "allOf": [ { "$ref": "#/definitions/stringArray" } ]
+        }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Id", "Payout" ],
+      "oneOf": [
+        {
+          "required": [ "Symbol", "Count" ],
+          "not": { "required": [ "Symbols" ] }
+        },
+        {
+          "required": [ "Symbols", "Name" ],
+          "not": {
+
+            "anyOf": [
+              { "required": [ "Symbol" ] },
+              { "required": [ "Count" ] }
+            ]
+          }
+        }
+      ]
+    },
+    "PayTableGroupConfigData": {
+      "type": "object",
+      "required": [ "Direction", "Type", "PayoutType", "Entries" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "PayoutType": {
+          "description": "Defines the default behavior for how the Payout value will be multiplied when awarding the win of any Entries in the group.",
+          "allOf": [ { "$ref": "#/definitions/PayoutType" } ]
+        },
+        "Type": {
+          "description": "Defines the default type for any Entries in the group. The type determines how the payout processor will evaluate the entry.",
+          "allOf": [ { "$ref": "#/definitions/PayTableType" } ]
+        },
+        "Direction": {
+          "description": "Defines the default direction for any Entries in the group. The direction determines how the payout processor will evaluate the display for the entry.",
+          "allOf": [ { "$ref": "#/definitions/PayTableDirection" } ]
+        },
+        "Sort": {
+          "description": "Defines how the engine will sort the entries for evaluation, when entries compete the first entry that matches takes presedence. Defaults to HighestPayout.",
+          "allOf": [ { "$ref": "#/definitions/PayTableSortMode" } ]
+        },
+        "Entries": {
+          "description": "Defines the list of pay table entries that are part of this pay table group.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/PayTableEntryConfigData" }
+        }
+      }
+    },
+    "PurchaseOptionConfigData": {
+      "type": "object",
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" },
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Multiplier": { "$ref": "#/definitions/nonZeroDecimal" },
+        "OutcomeState": { "$ref": "#/definitions/SlotGameState" },
+        "Effects": { "$ref": "#/definitions/distinctStringArray" },
+        "Flags": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/PurchaseOptionsFlags" }
+        }
+      },
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Id", "Multiplier", "OutcomeState" ]
+    },
+    "SymbolConfigData": {
+      "additionalItems": false,
+      "additionalProperties": false,
+      "required": [ "Id", "Name" ],
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "Unique identifier for the symbol.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "Name": {
+          "description": "Unique name for the symbol.",
+          "type": "string",
+          "minLength": 1
+        },
+        "Flags": {
+          "description": "List of flags describing the behaviour of the symbol.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/SymbolFlags" }
+        },
+        "Multiplier": { "$ref": "#/definitions/nonZeroPositiveInt32" },
+        "MultiplierMode": { "$ref": "#/definitions/SymbolMultiplierMode" },
+        "Density": { "$ref": "#/definitions/positiveInt32" },
+        "Substitutes": {
+          "description": "List of symbols that are considered a match for this symbol.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "Tags": {
+          "description": "List of string tags that can be associated with a symbol for later searching.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "SymbolSetConfigData": {
+      "required": [ "Name", "Type", "Symbols" ],
+      "additionalProperties": false,
+      "properties": {
+        "Name": { "type": "string" },
+        "Type": { "$ref": "#/definitions/SymbolSetType" },
+        "Symbols": { "$ref": "#/definitions/stringArray" },
+        "CollapseMode": { "$ref": "#/definitions/CollapseMode" },
+        "Weights": { "$ref": "#/definitions/UInt64Array" }
+      }
+    },
+    "TokenConfigData": {
+      "type": "object",
+      "required": [ "Id", "Name", "Reset" ],
+      "additionalItems": false,
+      "additionalProperties": false,
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" },
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "DefaultValue": { "$ref": "#/definitions/Int64" },
+        "Visibility": { "$ref": "#/definitions/ClientVisibility" },
+        "ShowDefaultValue": { "type": "boolean" },
+        "Reset": { "$ref": "#/definitions/ResetPeriod" },
+        "Tags": {
+          "description": "List of string tags that can be associated with a token for group resets.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "PlatformConfig": {
+      "additionalProperties": false,
+      "additionalItems": false,
+      "description": "Defines the configuration for Anvil Platform",
+      "type": "object",
+      "properties": {
+        "ModuleId": {
+          "description": "This should be the ModuleId assigned to your game, usually through GTP",
+          "allOf": [ { "$ref": "#/definitions/nonZeroPositiveInt32" } ]
+        },
+        "IsProgressive": {
+          "type": "boolean",
+          "description": "This should be set to true only if this game is an APS based progressive game."
+        },
+        "IsJackpot": {
+          "type": "boolean",
+          "description": "This should be set to true only if this game is a Jackpot based progressive game."
+        },
+        "IsLocalProgressive": {
+          "type": "boolean",
+          "description": ""
+        },
+        "HasFreeGames": {
+          "type": "boolean",
+          "description": "This shoudl be set to true if Free Games are supported."
+        },
+        "HasAchievements": {
+          "type": "boolean",
+          "description": "This should be set to true if the service will attempt to award Veyron Achievements."
+        },
+        "GameType": {
+          "type": "string",
+          "description": "Defines the type of game as reported to the Platform. Usually remains as \"Slot\"."
+        },
+        "Progressives": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ProgressiveGamePayConfig" }
+        },
+        "Jackpots": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/PlatformJackpotConfig" }
+        },
+        "Response": {
+          "type": "object",
+          "properties": {
+            "Format": {
+              "type": "string",
+              "enum": [ "Xml", "Json" ]
+            },
+            "Flags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [ "RemoveDisplayName", "RemoveDisplaySeed" ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "PlatformJackpotConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "additionalItems": false,
+      "properties": {
+        "Id": { "$ref": "#/definitions/positiveInt32" },
+        "ProviderName": { "$ref": "#/definitions/nonEmptyString" },
+        "ProviderId": { "$ref": "#/definitions/positiveInt32" }
+      }
+    },
+    "ProgressiveGamePayConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "additionalItems": false,
+      "properties": {
+        "GamePayId": { "$ref": "#/definitions/positiveInt32" },
+        "ScalingMode": { "$ref": "#/definitions/ProgressiveContributionScalingMode" },
+        "FixedScale": { "$ref": "#/definitions/ProgressiveFixedScale" }
+      }
+    },
+    "ProgressiveFixedScale": {
+      "type": "integer"
+    },
+
+    "BonusConfig": {
+      "type": "object",
+      "required": [ "Name", "Type", "Config" ],
+      "additionalItems": true,
+      "additionalProperties": true,
+      "properties": {
+        "Name": { "$ref": "#/definitions/nonEmptyString" },
+        "Type": { "$ref": "#/definitions/nonEmptyString" },
+        "Config": { "description": "Holds the JSON representation of the custom Bonus configuration, for consumption by this Bonus Game when loaded by the engine." }
+      }
+    }
+  }
+}

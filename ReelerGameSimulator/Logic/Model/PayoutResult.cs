@@ -1,0 +1,27 @@
+﻿using ReelerGameSimulator.Config.Data;
+using ReelerGameSimulator.Config.ReadOnlyData;
+
+namespace ReelerGameSimulator.Logic.Model
+{
+    public class PayoutResult
+    {
+        public int Id { get; set; }
+        public PayTableType Type { get; set; }
+        public int Multiplier { get; set; }
+        public int Payline { get; set; }
+        public string PaylineDefinition { get; set; }
+        public List<int> Indexes { get; set; }
+        public int Wilds { get; set; }
+
+        public PayoutResult(PayTableEntryConfig payTableEntryConfig, PayTableType type, int multiplier, int lineId, string paylineDefinition, List<int> indexes, int numWild)
+        {
+            Id = payTableEntryConfig.Id;
+            Type = type;
+            Multiplier = multiplier;
+            Payline = lineId;
+            PaylineDefinition = paylineDefinition;
+            Indexes = indexes;
+            Wilds = numWild;
+        }
+    }
+}

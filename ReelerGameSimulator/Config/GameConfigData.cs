@@ -1,8 +1,9 @@
-﻿using ReelerGameSimulator.Config.Models;
+﻿using ReelerGameSimulator.Config.Data;
+using ReelerGameSimulator.Config.Models;
 
-namespace ReelerGameSimulator.Config.Data
+namespace ReelerGameSimulator.Config
 {
-    public class EngineConfigurationData
+    public class GameConfigData 
     {
         public List<SymbolConfigData> Symbols { get; set; } = [];
         public List<SymbolSetConfigData> SymbolSets { get; set; } = [];

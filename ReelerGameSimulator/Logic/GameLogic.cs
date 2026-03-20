@@ -1,90 +1,106 @@
 ﻿using ReelerGameSimulator.Config;
 using ReelerGameSimulator.Logic.Model;
-using ReelerGameSimulator.Rng.Anvil;
-using ReelerGameSimulator.Rng.My;
-using System.Diagnostics;
-using System.Security.Cryptography;
+using ReelerGameSimulator.Rng;
+using ReelerGameSimulator.View;
 
 namespace ReelerGameSimulator.Logic
 {
     public class GameLogic
     {
-        public EngineConfiguration? EngineConfiguration { get; private set; }
-        public GameLogicState GameState { get; private set; } = new GameLogicState();
+        public GameConfig EngineConfiguration { get; private set; }
+        public GameState GameState { get; private set; } = new GameState();
+        public EventConfig EventConfig => GameState.EventConfig;
+        public RandomNumberGeneratorWapper Rng { get; private set; } = new RandomNumberGeneratorWapper();
 
-        public IRandom Rng { get; private set; } = new AnvilRng();
-        public Rng.My.MyRandomNumberGenerator MyRng { get; private set; } = new Rng.My.MyRandomNumberGenerator();
-
-        public GameLogic(EngineConfiguration engineConfiguration)
+        public GameLogic(GameConfig engineConfiguration)
         {
             EngineConfiguration = engineConfiguration;
         }
 
-        public void Run()
+        public void ProcessEvent()
         {
-            long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            UpdateDisplay();
+            CheckPayout();
+            DoPayout();
+        }
 
-            
-            for (var i = 0; i < 1_000_000_00; i++)
+        public virtual void InitialEventConfig()
+        {
+            EventConfig.DisplayConfig = EngineConfiguration.Displays["BaseRS11"];
+            EventConfig.PayoutProcessorConfig = EngineConfiguration.PayoutProcessors["Default"];
+            EventConfig.PayTableConfig = EngineConfiguration.PayTables["Default"];
+
+            foreach (var entry in EngineConfiguration.Symbols)
             {
-                var test = NumericExtensions.GetUInt32(Rng, 0, 1);
-                if (test < 0 || test > 1)
+                if (entry.Value.IsWild)
                 {
-                    throw new Exception("out of range test");
+                    EventConfig.WildSymbol = entry.Value;
+                    break;
                 }
             }
+        }
 
-            /*
-            for (var i = 0; i < 1_000_000_00; i++)
+        public virtual void UpdateDisplay()
+        {
+            if (GameState.EventConfig.DisplayConfig.Name != GameState.Display.Name)
             {
-                var test = RandomNumberGenerator.GetInt32(0, 99 + 1);
-                if (test > 100)
+                GameState.Display = new Display(EventConfig.DisplayConfig);
+            }
+                
+            List<int> test_Rng_3L1 = new List<int>() { 11, 3, 7, 24, 3 };
+            for (int col = 0; col < EventConfig.DisplayConfig.Columns; col++)
+            {
+                var symbolSetName = EventConfig.DisplayConfig.SymbolSets[col];
+                var symbolSet = EngineConfiguration.SymbolSets[symbolSetName];
+                //int stopIndex = Rng.GetInt32(symbolSet.Symbols.Count);
+                int stopIndex = test_Rng_3L1[col];
+
+                for (int row = 0; row < EventConfig.DisplayConfig.Rows; row++)
                 {
-                    throw new Exception("out of range test");
+                    int stopIndexRounded = (stopIndex + row) % symbolSet.Symbols.Count();
+                    var symbolName = symbolSet.Symbols[stopIndexRounded];
+                    var symbolConfig = EngineConfiguration.Symbols[symbolName];
+                    GameState.Display[col, row].Symbol = symbolConfig; 
                 }
             }
-            */
-            
+        }
 
-            /*
-            Span<byte> buffer = stackalloc byte[4 * 1024];
-            const int range = 2;
-            const int max = int.MaxValue - int.MaxValue % range;
-
-            for (int i = 0; i < 1_000_000_00; i += 1024)
+        public virtual void CheckPayout()
+        {
+            GameState.Payouts.Clear();
+            var linePays = GameLogicUtility.MatchLineWins(GameState, EngineConfiguration);
+            if (linePays.Count > 0)
             {
-                RandomNumberGenerator.Fill(buffer);
-
-                for (int j = 0; j < 1024; j++)
-                {
-                    int value;
-                    do
-                    {
-                        value = BitConverter.ToInt32(buffer.Slice(j * 4, 4)) & int.MaxValue;
-                    } while (value >= max);
-
-                    int test = value % range; // now uniform 0-100
-                    if (test < 0 || test > 1)
-                    {
-                        throw new Exception("out of range test");
-                    }
-                }
+                GameState.Payouts.AddRange(linePays);
             }
-            */
+        }
 
-            /*
-            for (int i = 0; i < 1_000_000_00; i ++)
+        public void DoPayout()
+        {
+            decimal totalPaid = 0;
+            for (int i = 0; i < GameState.Payouts.Count; i++)
             {
-                var test = MyRng.GetInt32(100);
-                if (test < 0 || test > 100)
-                {
-                    throw new Exception("out of range test");
-                }
-            }*/
 
-            long timeEnd = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            long timeElapse = timeEnd - timeStart;
-            Console.WriteLine(timeElapse);
+            }
+        }
+
+        public virtual void ShowProcessEventResult()
+        {
+            var grid = new Table(new string[] { "R0", "R1", "R2", "R3", "R4" }, Alignment.Left)
+            {
+                ItemAlignment = Alignment.Left,
+                Indentation = 5
+            };
+
+            var test = GameState.Display.Symbols.Select(x => x.Symbol.Name).ToList();
+
+            //grid.AddRow(new string[] { test[0], test[1], test[2], test[3], test[4] });
+
+            grid.AddRow([test[0], test[1], test[2], test[3], test[4]]);
+            grid.AddRow([test[5], test[6], test[7], test[8], test[9]]);
+            grid.AddRow([test[10], test[11], test[12], test[13], test[14]]);
+
+            Logger.Write(grid);
         }
     }
 }

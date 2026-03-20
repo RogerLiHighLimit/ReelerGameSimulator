@@ -1,19 +1,17 @@
 ﻿using System.Security.Cryptography;
 
-namespace ReelerGameSimulator.Rng.My
+namespace ReelerGameSimulator.Rng
 {
-    public class MyRandomNumberGenerator
+    public class RandomNumberGeneratorWapper
     {
         private const int IntBufferSize = 1024;
-
-        private int IntBufferOffset { get; set; } = 1024;
+        private int IntBufferOffset { get; set; } = IntBufferSize;
         private byte[] IntBuffer { get; set; } = new byte[IntBufferSize * 4];
 
         public int GetInt32(int range)
         {
-            return RandomNumberGenerator.GetInt32(0, range);
+            //return RandomNumberGenerator.GetInt32(0, range);
 
-            /*
             if (IntBufferOffset >= IntBufferSize)
             {
                 Span<byte> buffer = stackalloc byte[4 * 1024];
@@ -29,10 +27,9 @@ namespace ReelerGameSimulator.Rng.My
                 value = BitConverter.ToInt32(IntBuffer, IntBufferOffset) & int.MaxValue;
                 IntBufferOffset += 4;
             } while (value >= max);
-                        
+
             int returnValue = value % range;
             return returnValue;
-            */
         }
     }
 }

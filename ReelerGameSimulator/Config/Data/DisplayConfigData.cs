@@ -1,6 +1,6 @@
 ﻿namespace ReelerGameSimulator.Config.Data
 {
-    public class DisplayConfigData
+    public class DisplayConfigData 
     {
         public string Name { get; set; } = string.Empty;
         public int Columns { get; set; }
