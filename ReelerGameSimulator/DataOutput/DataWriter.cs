@@ -4,7 +4,7 @@ using ReelerGameSimulator.Stats.Models;
 
 namespace SimulatorLib.DataOutput
 {
-    internal class DataWriter
+    public class DataWriter
     {
         public static void ShowEventGameState(GameState st)
         {
@@ -23,14 +23,12 @@ namespace SimulatorLib.DataOutput
             Logger.Write(grid);
         }
 
-        internal static void ShowGamePlayStats(GameStatsModel gameStatsModel)
+        public static void ShowGamePlayStats(GameStatsModel gameStatsModel)
         {
-            var sortedDict = gameStatsModel.PayoutReasonStats
-                .OrderBy(x => x.Key)
-                .ToDictionary(x => x.Key, x => x.Value);
-            foreach (var entry in gameStatsModel.PayoutReasonStats)
+            var sortedDict = gameStatsModel.PayoutReasonStats.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
+            foreach (var entry in sortedDict)
             {
-                decimal rtp = (decimal)entry.Value.TotalWin/(decimal)entry.Value.TotalBet;
+                decimal rtp = (decimal)entry.Value.TotalWin/(10* gameStatsModel.TotalWagerCycle);
                 Console.WriteLine($"{entry.Key}, Hits={entry.Value.Hits}, Rtp={rtp}");
             }
         }

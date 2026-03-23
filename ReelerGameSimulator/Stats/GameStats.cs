@@ -7,20 +7,21 @@ namespace ReelerGameSimulator.Stats
     {
         public GameStatsModel GameStatsModel { get; } = new GameStatsModel();
 
-        public void StatsGamePlay(GameState gameState)
+        public void StatsEvent(GameState gameState, GameStatsModel gameStatsModel)
         {
+            gameStatsModel.TotalWagerCycle++;
+
             foreach (var entry in gameState.Payouts)
             {
                 if (GameStatsModel.PayoutReasonStats.ContainsKey(entry.Reason))
                 {
                     var stats = GameStatsModel.PayoutReasonStats[entry.Reason];
                     stats.Hits++;
-                    stats.TotalBet += gameState.EventFinancials.Wager;
                     stats.TotalWin += (long)entry.Amount;
                 }
                 else
                 {
-                    GameStatsModel.PayoutReasonStats.Add(entry.Reason, new PayoutTypeStats() { Hits = 1, TotalBet = gameState.EventFinancials.Wager, TotalWin = (long)entry.Amount });
+                    GameStatsModel.PayoutReasonStats.Add(entry.Reason, new PayoutTypeStats() { Hits = 1, TotalWin = (long)entry.Amount });
                 }
             }
         }

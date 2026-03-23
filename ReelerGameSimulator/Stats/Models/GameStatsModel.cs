@@ -5,6 +5,7 @@ namespace ReelerGameSimulator.Stats.Models
 {
     public class GameStatsModel
     {
-        public Dictionary<string, PayoutTypeStats> PayoutReasonStats { get; } = new Dictionary<string, PayoutTypeStats>();
+        public long TotalWagerCycle { get; set; } = 0;
+        public Dictionary<string, PayoutTypeStats> PayoutReasonStats { get; set; } = new Dictionary<string, PayoutTypeStats>();
     }
 }
