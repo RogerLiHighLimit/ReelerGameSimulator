@@ -1,12 +1,14 @@
 ﻿using System.Security.Cryptography;
 
-namespace ReelerGameSimulator.Logic.Rng
+namespace ReelerGameSimulator.Rng
 {
     public class RandomNumberGeneratorWapper
     {
         private const int IntBufferSize = 1024;
+        private const int RngSize = 4;
+
         private int IntBufferOffset { get; set; } = IntBufferSize;
-        private byte[] IntBuffer { get; set; } = new byte[IntBufferSize * 4];
+        private byte[] IntBuffer { get; set; } = new byte[IntBufferSize * RngSize];
 
         public int GetInt32(int range)
         {
@@ -14,10 +16,7 @@ namespace ReelerGameSimulator.Logic.Rng
 
             if (IntBufferOffset >= IntBufferSize)
             {
-                Span<byte> buffer = stackalloc byte[4 * 1024];
-                RandomNumberGenerator.Fill(buffer);
-                buffer.CopyTo(IntBuffer);
-                IntBufferOffset = 0;
+                RefreshBuffer();
             }
 
             int max = int.MaxValue - int.MaxValue % range;
@@ -25,11 +24,24 @@ namespace ReelerGameSimulator.Logic.Rng
             do
             {
                 value = BitConverter.ToInt32(IntBuffer, IntBufferOffset) & int.MaxValue;
-                IntBufferOffset += 4;
+                IntBufferOffset += RngSize;
+                if (IntBufferOffset >= IntBufferSize)
+                {
+                    RefreshBuffer();
+                }
+
             } while (value >= max);
 
             int returnValue = value % range;
             return returnValue;
+        }
+
+        private void RefreshBuffer()
+        {
+            Span<byte> buffer = stackalloc byte[IntBufferSize * RngSize];
+            RandomNumberGenerator.Fill(buffer);
+            buffer.CopyTo(IntBuffer);
+            IntBufferOffset = 0;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SimulatorLib.DataOutput
 
     public class PayItemStats
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public long Hits { get; set; }
         public decimal Rtp { get; set; }
     }

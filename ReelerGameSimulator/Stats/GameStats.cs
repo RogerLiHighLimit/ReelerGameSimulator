@@ -7,9 +7,9 @@ namespace ReelerGameSimulator.Stats
     {
         public GameStatsModel GameStatsModel { get; } = new GameStatsModel();
 
-        public void StatsEvent(GameState gameState, GameStatsModel gameStatsModel)
+        public void StatsEvent(GameState gameState)
         {
-            gameStatsModel.TotalWagerCycle++;
+            GameStatsModel.TotalWagerCycle++;
 
             foreach (var entry in gameState.Payouts)
             {

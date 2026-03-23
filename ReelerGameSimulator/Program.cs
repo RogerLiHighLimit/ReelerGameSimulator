@@ -1,56 +1,42 @@
-﻿using ReelerGameSimulator.Config;
-using ReelerGameSimulator.Logic;
-using ReelerGameSimulator.Stats;
+﻿using ReelerGameSimulator;
+using ReelerGameSimulator.Config;
 using ReelerGameSimulator.Stats.Models;
 using SimulatorLib.DataOutput;
 using System.Text.Json;
 
 int NumTask = 10;
-int TotalCycle = 1_000_000;
+int TotalCycle = 1000_000_000;
 int CyclePerTask = TotalCycle / NumTask;
 int ReportPercentage = 10;
 int CycleReport = CyclePerTask/ ReportPercentage;
 
-Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
+Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $"_cycles={TotalCycle:N0}");
 long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
+#region game config
 string json = File.ReadAllText("DataInput//GameConfig.json");
 var gameConfigData = JsonSerializer.Deserialize<GameConfigData>(json);
 if (gameConfigData == null)
     return;
 
 var gameConfig = new GameConfig(gameConfigData);
+#endregion
 
-#region tasks run
+#region game logic and stats tasks
 var tasks = new List<Task<GameStatsModel>>();
+
 for (int i = 0; i < NumTask; i++)
 {
     int copy = i;
-    tasks.Add(Task.Run(() =>
-    {
-        GameLogic gameLogic = new GameLogic(gameConfig);
-        GameStats gameStats = new GameStats();
-
-        for (int j = 0; j < CyclePerTask; j++)
-        {
-            gameLogic.InitialGameState();
-            gameLogic.ProcessEvent();
-            gameStats.StatsEvent(gameLogic.GameState, gameStats.GameStatsModel);
-
-            if (copy == 0 && (j % CycleReport) == 0)
-            {
-                Console.WriteLine($"Task {j*10/CycleReport}% complete at {DateTimeOffset.UtcNow.LocalDateTime}");
-            }
-        }      
-        return gameStats.GameStatsModel;
-    }));
+    var worker = new GameSimulationTask(gameConfig, copy, CyclePerTask, CycleReport);
+    tasks.Add(Task.Run(() => worker.Run()));
 }
 
-// Wait for all tasks to complete and collect results
+// Wait and collect results
 GameStatsModel[] taskResults = await Task.WhenAll(tasks);
 #endregion
 
-#region merge the output results
+#region merge and output stats results
 GameStatsModel totalStats = new GameStatsModel();
 for (int i = 1; i < taskResults.Length; i++)
 {

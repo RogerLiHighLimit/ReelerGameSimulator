@@ -1,6 +1,6 @@
 ﻿using ReelerGameSimulator.Config;
 using ReelerGameSimulator.Logic.Model;
-using ReelerGameSimulator.Logic.Rng;
+using ReelerGameSimulator.Rng;
 
 namespace ReelerGameSimulator.Logic
 {
