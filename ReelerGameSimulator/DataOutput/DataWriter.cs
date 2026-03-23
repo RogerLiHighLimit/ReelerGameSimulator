@@ -1,36 +1,54 @@
-﻿using ReelerGameSimulator.DataOutput.ConsoleWriter;
-using ReelerGameSimulator.Logic.Model;
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Table;
 using ReelerGameSimulator.Stats.Models;
 
 namespace SimulatorLib.DataOutput
 {
     public class DataWriter
     {
-        public static void ShowEventGameState(GameState st)
-        {
-            var grid = new Table(new string[] { "R0", "R1", "R2", "R3", "R4" }, Alignment.Left)
-            {
-                ItemAlignment = Alignment.Left,
-                Indentation = 5
-            };
-
-            var test = st.Display.Symbols.Select(x => x.Symbol.Name).ToList();
-
-            grid.AddRow([test[0], test[1], test[2], test[3], test[4]]);
-            grid.AddRow([test[5], test[6], test[7], test[8], test[9]]);
-            grid.AddRow([test[10], test[11], test[12], test[13], test[14]]);
-
-            Logger.Write(grid);
-        }
-
         public static void ShowGamePlayStats(GameStatsModel gameStatsModel)
         {
+            List<PayItemStats> list = new List<PayItemStats>();
+
             var sortedDict = gameStatsModel.PayoutReasonStats.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             foreach (var entry in sortedDict)
             {
                 decimal rtp = (decimal)entry.Value.TotalWin/(10* gameStatsModel.TotalWagerCycle);
-                Console.WriteLine($"{entry.Key}, Hits={entry.Value.Hits}, Rtp={rtp}");
+                var currentItem = new PayItemStats() { Name = entry.Key, Hits = entry.Value.Hits, Rtp = rtp };
+                list.Add(currentItem);
+            }
+
+            ExcelPackage.License.SetNonCommercialOrganization("My Noncommercial organization");
+
+            using (var package = new ExcelPackage())
+            {
+                var ws = package.Workbook.Worksheets.Add("RtpPaylines");
+
+                // Load list into worksheet
+                ws.Cells["A1"].LoadFromCollection(list, true);
+
+                // Format RTP column as %
+                ws.Column(3).Style.Numberformat.Format = "0.000000%";
+
+                // Auto fit columns
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                // Create table (include all 3 columns)
+                var range = ws.Cells[1, 1, list.Count + 1, 3];
+                var table = ws.Tables.Add(range, "RtpPaylines");
+
+                table.TableStyle = TableStyles.None;
+                table.ShowFilter = false;
+
+                package.SaveAs(new FileInfo("RtpPaylines.xlsx"));
             }
         }
+    }
+
+    public class PayItemStats
+    {
+        public string Name { get; set; }
+        public long Hits { get; set; }
+        public decimal Rtp { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ReelerGameSimulator.Config;
-using ReelerGameSimulator.DataOutput.ConsoleWriter;
 using ReelerGameSimulator.Logic.Model;
 using ReelerGameSimulator.Logic.Rng;
 

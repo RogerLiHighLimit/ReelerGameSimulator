@@ -1,5 +1,4 @@
 ﻿using ReelerGameSimulator.Config;
-using ReelerGameSimulator.DataOutput.ConsoleWriter;
 using ReelerGameSimulator.Logic;
 using ReelerGameSimulator.Stats;
 using ReelerGameSimulator.Stats.Models;
@@ -7,7 +6,7 @@ using SimulatorLib.DataOutput;
 using System.Text.Json;
 
 int NumTask = 10;
-int TotalCycle = 100_000_000;
+int TotalCycle = 1_000_000;
 int CyclePerTask = TotalCycle / NumTask;
 int ReportPercentage = 10;
 int CycleReport = CyclePerTask/ ReportPercentage;
@@ -16,7 +15,11 @@ Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
 long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 string json = File.ReadAllText("DataInput//GameConfig.json");
-var engineConfigurationData = JsonSerializer.Deserialize<GameConfigData>(json);
+var gameConfigData = JsonSerializer.Deserialize<GameConfigData>(json);
+if (gameConfigData == null)
+    return;
+
+var gameConfig = new GameConfig(gameConfigData);
 
 #region tasks run
 var tasks = new List<Task<GameStatsModel>>();
@@ -25,9 +28,7 @@ for (int i = 0; i < NumTask; i++)
     int copy = i;
     tasks.Add(Task.Run(() =>
     {
-        var EngineConfiguration = new GameConfig(engineConfigurationData);
-        GameLogic gameLogic = new GameLogic(EngineConfiguration);
-        Logger.Configure(LoggingFlags.Console);
+        GameLogic gameLogic = new GameLogic(gameConfig);
         GameStats gameStats = new GameStats();
 
         for (int j = 0; j < CyclePerTask; j++)
