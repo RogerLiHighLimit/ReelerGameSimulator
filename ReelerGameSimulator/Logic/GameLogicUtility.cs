@@ -1,4 +1,5 @@
 ﻿using ReelerGameSimulator.Config;
+using ReelerGameSimulator.Config.Data;
 using ReelerGameSimulator.Config.ReadOnlyData;
 using ReelerGameSimulator.Logic.Model;
 
@@ -8,7 +9,7 @@ namespace ReelerGameSimulator.Logic
     {
         internal static List<PayoutResult> MatchLineWins(GameState st, GameConfig config)
         {
-            var eventConfig = st.EventConfig;
+            var eventConfig = st.EventState;
             var paytable = eventConfig.PaytableLines.Entries;
 
             List<PayoutResult> result = new List<PayoutResult>();
@@ -122,6 +123,37 @@ namespace ReelerGameSimulator.Logic
             }
 
             return result;
+        }
+
+        internal static long CalculatePayoutAmount(GameState gameState, GameConfig gameConfig, PayoutResult pay)
+        {
+            long totalAmount = 0;
+
+            if (pay.Amount < 0M)
+                throw new GameLogicException(string.Format("Invalid payout amount: {0}.", pay.Amount));
+
+            switch (pay.Type)
+            {
+                case PayTableType.Payline:
+                    var amountDecimal = pay.Amount * gameState.EventFinancials.Wager / gameConfig.BetConfig.Multiplier;
+                    totalAmount = ConvertDecimalToLongSafely(amountDecimal);
+                    break;
+
+                default:
+                    throw new GameLogicException($"Pay table type: {pay.Type}");
+            }
+                        
+            return totalAmount;
+        }
+
+        internal static long ConvertDecimalToLongSafely(decimal orignial)
+        {
+            decimal returnValue = decimal.Truncate(orignial);
+            if ((orignial - returnValue) != 0)
+            {
+                throw new GameLogicException("Losing financil data");
+            }
+            return Convert.ToInt64(orignial);
         }
     }
 }

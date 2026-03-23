@@ -1,4 +1,4 @@
-﻿namespace ReelerGameSimulator.View
+﻿namespace ReelerGameSimulator.DataOutput.ConsoleWriter
 {
     public interface ILogWriter
     {

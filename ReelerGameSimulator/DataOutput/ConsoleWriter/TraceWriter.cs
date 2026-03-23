@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ReelerGameSimulator.View
+namespace ReelerGameSimulator.DataOutput.ConsoleWriter
 {
     public class TraceWriter : ILogWriter
     {
@@ -10,11 +10,11 @@ namespace ReelerGameSimulator.View
 
         public TraceWriter()
         {
-            this.Name = "Trace";
-            this.Flags = LoggingFlags.Writer | LoggingFlags.Trace;
+            Name = "Trace";
+            Flags = LoggingFlags.Writer | LoggingFlags.Trace;
         }
 
-        public void Write(char c) => Trace.Write((object)c);
+        public void Write(char c) => Trace.Write(c);
 
         public void Write(string str) => Trace.Write(str);
 
@@ -24,6 +24,6 @@ namespace ReelerGameSimulator.View
 
         public void WriteLine(string str) => Trace.WriteLine(str);
 
-        public override string ToString() => this.Name;
+        public override string ToString() => Name;
     }
 }

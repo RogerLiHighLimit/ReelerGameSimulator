@@ -1,4 +1,4 @@
-﻿namespace ReelerGameSimulator.View
+﻿namespace ReelerGameSimulator.DataOutput.ConsoleWriter
 {
     public class ConsoleWriter : ILogWriter
     {
@@ -8,8 +8,8 @@
 
         public ConsoleWriter()
         {
-            this.Name = "Console";
-            this.Flags = LoggingFlags.Writer | LoggingFlags.Console;
+            Name = "Console";
+            Flags = LoggingFlags.Writer | LoggingFlags.Console;
         }
 
         public void Write(char c) => Console.Write(c);
@@ -22,6 +22,6 @@
 
         public void WriteLine(string str) => Console.WriteLine(str);
 
-        public override string ToString() => this.Name;
+        public override string ToString() => Name;
     }
 }

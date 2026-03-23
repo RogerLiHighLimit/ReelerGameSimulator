@@ -1,4 +1,5 @@
-﻿using ReelerGameSimulator.Config.ReadOnlyData;
+﻿using ReelerGameSimulator.Config.Data;
+using ReelerGameSimulator.Config.ReadOnlyData;
 
 namespace ReelerGameSimulator.Config
 {
@@ -6,6 +7,7 @@ namespace ReelerGameSimulator.Config
     {
         protected GameConfigData Data { get; private set; }
 
+        public BetConfig BetConfig { get; private set; }
         public IReadOnlyDictionary<string, SymbolConfig> Symbols { get; private set; }
         public IReadOnlyDictionary<string, SymbolSetConfig> SymbolSets { get; private set; }
         public IReadOnlyDictionary<string, DisplayConfig> Displays { get; private set; }
@@ -13,18 +15,29 @@ namespace ReelerGameSimulator.Config
         public IReadOnlyDictionary<string, PayoutProcessorConfig> PayoutProcessors { get; private set; }
         public IReadOnlyDictionary<string, PayTableConfig> PayTables { get; private set; }
 
+        public IReadOnlyList<SymbolConfig> WildSymbols { get; private set; } // rpger pending SymbolsConfig
+
         public GameConfig(GameConfigData data)
         {
             Data = data;
 
+            BetConfig = new BetConfig(data.Bet);
+
             #region Symbols
             Dictionary<string, SymbolConfig> _Symbols = new Dictionary<string, SymbolConfig>();
+            List<SymbolConfig> _WildSymbols = new List<SymbolConfig>();
             foreach (var entry in data.Symbols)
             {
-                SymbolConfig config = new SymbolConfig(entry);
-                _Symbols.Add(config.Name, config);
+                SymbolConfig symbolConfig = new SymbolConfig(entry);
+                _Symbols.Add(symbolConfig.Name, symbolConfig);
+
+                if (entry.Flags.Contains(SymbolFlags.Wild))
+                {
+                    _WildSymbols.Add(symbolConfig);
+                }
             }
             Symbols = _Symbols;
+            WildSymbols = _WildSymbols;
             #endregion
 
             #region SymbolSets

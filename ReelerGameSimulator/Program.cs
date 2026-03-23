@@ -1,9 +1,11 @@
 ﻿using ReelerGameSimulator.Config;
+using ReelerGameSimulator.DataOutput.ConsoleWriter;
 using ReelerGameSimulator.Logic;
-using ReelerGameSimulator.View;
+using ReelerGameSimulator.Stats;
+using SimulatorLib.DataOutput;
 using System.Text.Json;
 
-string json = File.ReadAllText("Data//GameConfig.json");
+string json = File.ReadAllText("DataInput//GameConfig.json");
 var engineConfigurationData = JsonSerializer.Deserialize<GameConfigData>(json);
 if (engineConfigurationData != null)
 {
@@ -11,11 +13,23 @@ if (engineConfigurationData != null)
     GameLogic gameLogic = new GameLogic(EngineConfiguration);
     Logger.Configure(LoggingFlags.Console);
     long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
 
-    gameLogic.InitialEventConfig();
-    gameLogic.ProcessEvent();
-    gameLogic.ShowProcessEventResult();
+    GameStats gameStats = new GameStats();
 
+    int totalCycle = 1;
+    for (int i = 0; i < totalCycle; i++)
+    {
+        gameLogic.InitialGameState();
+        gameLogic.ProcessEvent();
+        gameStats.StatsGamePlay(gameLogic.GameState);
+
+        DataWriter.ShowEventGameState(gameLogic.GameState);
+    }
+
+    DataWriter.ShowGamePlayStats(gameStats.GameStatsModel);
+
+    Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
     long timeEnd = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     long timeElapse = timeEnd - timeStart;
     Console.WriteLine(timeElapse);

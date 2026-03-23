@@ -1,6 +1,4 @@
 ﻿using ReelerGameSimulator.Config.ReadOnlyData;
-using ReelerGameSimulator.Rng;
-using System;
 
 namespace ReelerGameSimulator.Logic.Model
 {
@@ -33,16 +31,6 @@ namespace ReelerGameSimulator.Logic.Model
                 int row = index / Columns;
                 Symbols.Add(new DisplayItem(index, column, row, new SymbolConfig()));
             }
-        }
-
-        internal string GetSymbolsString()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal string GetSymbolGrid()
-        {
-            throw new NotImplementedException();
         }
     }
 

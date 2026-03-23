@@ -1,4 +1,4 @@
-﻿using ReelerGameSimulator.Config.Models;
+﻿using ReelerGameSimulator.Config.Data;
 
 namespace ReelerGameSimulator.Config.ReadOnlyData
 {

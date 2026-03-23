@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ReelerGameSimulator.Rng
+namespace ReelerGameSimulator.Logic.Rng
 {
     public class RandomNumberGeneratorWapper
     {

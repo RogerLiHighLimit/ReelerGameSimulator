@@ -7,6 +7,8 @@ namespace ReelerGameSimulator.Logic.Model
     {
         public int Id { get; set; }
         public PayTableType Type { get; set; }
+        public string Reason { get; set; }
+        public decimal Amount { get; set; }
         public int Multiplier { get; set; }
         public int Payline { get; set; }
         public string PaylineDefinition { get; set; }
@@ -16,7 +18,8 @@ namespace ReelerGameSimulator.Logic.Model
         public PayoutResult(PayTableEntryConfig payTableEntryConfig, PayTableType type, int multiplier, int lineId, string paylineDefinition, List<int> indexes, int numWild)
         {
             Id = payTableEntryConfig.Id;
-            Type = type;
+            Reason = payTableEntryConfig.Count + "x" + payTableEntryConfig.Symbol;
+            Amount = payTableEntryConfig.Payout;
             Multiplier = multiplier;
             Payline = lineId;
             PaylineDefinition = paylineDefinition;

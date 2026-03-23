@@ -1,4 +1,4 @@
-﻿namespace ReelerGameSimulator.View
+﻿namespace ReelerGameSimulator.DataOutput.ConsoleWriter
 {
     [Flags]
     public enum LoggingFlags

@@ -1,20 +1,20 @@
 ﻿using ReelerGameSimulator.Config;
+using ReelerGameSimulator.DataOutput.ConsoleWriter;
 using ReelerGameSimulator.Logic.Model;
-using ReelerGameSimulator.Rng;
-using ReelerGameSimulator.View;
+using ReelerGameSimulator.Logic.Rng;
 
 namespace ReelerGameSimulator.Logic
 {
     public class GameLogic
     {
-        public GameConfig EngineConfiguration { get; private set; }
+        public GameConfig GameConfig { get; private set; }
         public GameState GameState { get; private set; } = new GameState();
-        public EventConfig EventConfig => GameState.EventConfig;
+        public EventState EventConfig => GameState.EventState;
         public RandomNumberGeneratorWapper Rng { get; private set; } = new RandomNumberGeneratorWapper();
 
         public GameLogic(GameConfig engineConfiguration)
         {
-            EngineConfiguration = engineConfiguration;
+            GameConfig = engineConfiguration;
         }
 
         public void ProcessEvent()
@@ -24,13 +24,13 @@ namespace ReelerGameSimulator.Logic
             DoPayout();
         }
 
-        public virtual void InitialEventConfig()
+        public virtual void InitialGameState()
         {
-            EventConfig.DisplayConfig = EngineConfiguration.Displays["BaseRS11"];
-            EventConfig.PayoutProcessorConfig = EngineConfiguration.PayoutProcessors["Default"];
-            EventConfig.PayTableConfig = EngineConfiguration.PayTables["Default"];
+            EventConfig.DisplayConfig = GameConfig.Displays["BaseRS11"];
+            EventConfig.PayoutProcessorConfig = GameConfig.PayoutProcessors["Default"];
+            EventConfig.PayTableConfig = GameConfig.PayTables["Default"];
 
-            foreach (var entry in EngineConfiguration.Symbols)
+            foreach (var entry in GameConfig.Symbols)
             {
                 if (entry.Value.IsWild)
                 {
@@ -42,24 +42,24 @@ namespace ReelerGameSimulator.Logic
 
         public virtual void UpdateDisplay()
         {
-            if (GameState.EventConfig.DisplayConfig.Name != GameState.Display.Name)
+            if (GameState.EventState.DisplayConfig.Name != GameState.Display.Name)
             {
                 GameState.Display = new Display(EventConfig.DisplayConfig);
             }
                 
-            List<int> test_Rng_3L1 = new List<int>() { 11, 3, 7, 24, 3 };
+            //List<int> test_Rng_3L1 = new List<int>() { 11, 3, 7, 24, 3 };
             for (int col = 0; col < EventConfig.DisplayConfig.Columns; col++)
             {
                 var symbolSetName = EventConfig.DisplayConfig.SymbolSets[col];
-                var symbolSet = EngineConfiguration.SymbolSets[symbolSetName];
-                //int stopIndex = Rng.GetInt32(symbolSet.Symbols.Count);
-                int stopIndex = test_Rng_3L1[col];
+                var symbolSet = GameConfig.SymbolSets[symbolSetName];
+                int stopIndex = Rng.GetInt32(symbolSet.Symbols.Count);
+                //int stopIndex = test_Rng_3L1[col];
 
                 for (int row = 0; row < EventConfig.DisplayConfig.Rows; row++)
                 {
                     int stopIndexRounded = (stopIndex + row) % symbolSet.Symbols.Count();
                     var symbolName = symbolSet.Symbols[stopIndexRounded];
-                    var symbolConfig = EngineConfiguration.Symbols[symbolName];
+                    var symbolConfig = GameConfig.Symbols[symbolName];
                     GameState.Display[col, row].Symbol = symbolConfig; 
                 }
             }
@@ -68,7 +68,7 @@ namespace ReelerGameSimulator.Logic
         public virtual void CheckPayout()
         {
             GameState.Payouts.Clear();
-            var linePays = GameLogicUtility.MatchLineWins(GameState, EngineConfiguration);
+            var linePays = GameLogicUtility.MatchLineWins(GameState, GameConfig);
             if (linePays.Count > 0)
             {
                 GameState.Payouts.AddRange(linePays);
@@ -77,30 +77,12 @@ namespace ReelerGameSimulator.Logic
 
         public void DoPayout()
         {
-            decimal totalPaid = 0;
-            for (int i = 0; i < GameState.Payouts.Count; i++)
+            long totalPaid = 0;
+            foreach (var pay in GameState.Payouts)
             {
-
+                totalPaid += GameLogicUtility.CalculatePayoutAmount(GameState, GameConfig, pay);
             }
-        }
-
-        public virtual void ShowProcessEventResult()
-        {
-            var grid = new Table(new string[] { "R0", "R1", "R2", "R3", "R4" }, Alignment.Left)
-            {
-                ItemAlignment = Alignment.Left,
-                Indentation = 5
-            };
-
-            var test = GameState.Display.Symbols.Select(x => x.Symbol.Name).ToList();
-
-            //grid.AddRow(new string[] { test[0], test[1], test[2], test[3], test[4] });
-
-            grid.AddRow([test[0], test[1], test[2], test[3], test[4]]);
-            grid.AddRow([test[5], test[6], test[7], test[8], test[9]]);
-            grid.AddRow([test[10], test[11], test[12], test[13], test[14]]);
-
-            Logger.Write(grid);
+            GameState.EventFinancials.TotalWIn = totalPaid;
         }
     }
 }

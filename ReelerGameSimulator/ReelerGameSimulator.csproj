@@ -8,11 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Data\GameConfig.json">
+    <None Update="DataInput\GameConfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties data_4gameconfig_1json__JsonSchema="anvil-slot-2.3-game-schema.json" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="DataOutput\ExcelWriter\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

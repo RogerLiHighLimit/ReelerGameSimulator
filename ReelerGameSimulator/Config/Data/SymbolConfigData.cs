@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ReelerGameSimulator.Config.Models
+namespace ReelerGameSimulator.Config.Data
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum SymbolFlags
@@ -17,6 +17,6 @@ namespace ReelerGameSimulator.Config.Models
         public int Id { get; set; } = -1;
         public string Name { get; set; } = string.Empty;
 
-        public List<SymbolFlags> Flags { get; set; } = new List<SymbolFlags>();
+        public List<SymbolFlags> Flags { get; set; } = [];
     }
 }

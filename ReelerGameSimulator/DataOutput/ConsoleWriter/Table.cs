@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ReelerGameSimulator.View
+namespace ReelerGameSimulator.DataOutput.ConsoleWriter
 {
     public enum Alignment
     {
@@ -137,7 +137,7 @@ namespace ReelerGameSimulator.View
             Item[] array = new Item[row.Length];
             for (int i = 0; i < row.Length; i++)
             {
-                Item item = (array[i] = new Item(row[i]));
+                Item item = array[i] = new Item(row[i]);
                 if (item.Length > _columnWidths[i])
                 {
                     _columnWidths[i] = item.Length;
@@ -168,7 +168,7 @@ namespace ReelerGameSimulator.View
             for (int i = 0; i < row.Length; i++)
             {
                 Item item = new Item(row[i]);
-                item.Colour = ((colours != null) ? colours[i] : null);
+                item.Colour = colours != null ? colours[i] : null;
                 array[i] = item;
                 if (item.Length > _columnWidths[i])
                 {
@@ -195,7 +195,7 @@ namespace ReelerGameSimulator.View
             for (int i = 0; i < objects.Length; i++)
             {
                 T val = objects[i];
-                Item item = ((converter == null) ? new Item(val) : new Item(converter(val)));
+                Item item = converter == null ? new Item(val) : new Item(converter(val));
                 if (colour != null)
                 {
                     item.Colour = colour(val);
@@ -356,7 +356,7 @@ namespace ReelerGameSimulator.View
 
         private int GetRowSpan()
         {
-            int num = ((!UniformColumns) ? (_columnWidths.Sum() + (int)(ItemPadding * 2) * Columns) : ((_maxColumnWidth + (int)(ItemPadding * 2)) * Columns));
+            int num = !UniformColumns ? _columnWidths.Sum() + (int)(ItemPadding * 2) * Columns : (_maxColumnWidth + (int)(ItemPadding * 2)) * Columns;
             return (int)Indentation + num + Columns + 1;
         }
 
