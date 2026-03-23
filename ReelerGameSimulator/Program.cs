@@ -7,7 +7,7 @@ using SimulatorLib.DataOutput;
 using System.Text.Json;
 
 int NumTask = 10;
-int TotalCycle = 100_000_000;
+int TotalCycle = 100_000_00;
 int CyclePerTask = TotalCycle / NumTask;
 int ReportPercentage = 10;
 int CycleReport = CyclePerTask/ ReportPercentage;

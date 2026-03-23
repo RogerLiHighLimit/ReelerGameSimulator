@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "SImulator": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\MyDesignTool\\DesignTool_Tunning\\ReelerGameSimulator\\ReelerGameSimulator\\bin\\Debug\\net8.0"
+    },
+    "Calculator": {
+      "commandName": "Project"
+    }
+  }
+}
