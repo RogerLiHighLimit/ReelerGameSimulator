@@ -1,6 +1,5 @@
 ﻿using ReelerGameSimulator.Config;
 using ReelerGameSimulator.Logic.Model;
-using ReelerGameSimulator.Rng;
 
 namespace ReelerGameSimulator.Logic
 {
@@ -9,18 +8,10 @@ namespace ReelerGameSimulator.Logic
         public GameConfig GameConfig { get; private set; }
         public GameState GameState { get; private set; } = new GameState();
         public EventState EventConfig => GameState.EventState;
-        public RandomNumberGeneratorWapper Rng { get; private set; } = new RandomNumberGeneratorWapper();
 
         public GameLogic(GameConfig engineConfiguration)
         {
             GameConfig = engineConfiguration;
-        }
-
-        public void ProcessEvent()
-        {
-            UpdateDisplay();
-            CheckPayout();
-            DoPayout();
         }
 
         public virtual void InitialGameState()
@@ -39,27 +30,25 @@ namespace ReelerGameSimulator.Logic
             }
         }
 
-        public virtual void UpdateDisplay()
+        public virtual void UpdateDisplay(List<int> seeds)
         {
             if (GameState.EventState.DisplayConfig.Name != GameState.Display.Name)
             {
                 GameState.Display = new Display(EventConfig.DisplayConfig);
             }
-                
-            //List<int> test_Rng_3L1 = new List<int>() { 11, 3, 7, 24, 3 };
+
             for (int col = 0; col < EventConfig.DisplayConfig.Columns; col++)
             {
                 var symbolSetName = EventConfig.DisplayConfig.SymbolSets[col];
                 var symbolSet = GameConfig.SymbolSets[symbolSetName];
-                int stopIndex = Rng.GetInt32(symbolSet.Symbols.Count);
-                //int stopIndex = test_Rng_3L1[col];
+                int stopIndex = seeds[col];
 
                 for (int row = 0; row < EventConfig.DisplayConfig.Rows; row++)
                 {
                     int stopIndexRounded = (stopIndex + row) % symbolSet.Symbols.Count();
                     var symbolName = symbolSet.Symbols[stopIndexRounded];
                     var symbolConfig = GameConfig.Symbols[symbolName];
-                    GameState.Display[col, row].Symbol = symbolConfig; 
+                    GameState.Display[col, row].Symbol = symbolConfig;
                 }
             }
         }

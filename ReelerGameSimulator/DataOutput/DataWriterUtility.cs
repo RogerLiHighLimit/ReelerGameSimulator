@@ -4,17 +4,31 @@ using ReelerGameSimulator.Stats.Models;
 
 namespace SimulatorLib.DataOutput
 {
-    public class DataWriter
+    public class DataWriterUtility
     {
         public static void ShowGamePlayStats(GameStatsModel gameStatsModel)
         {
+            List<string> rowHeaders = new List<string>() {
+                "5xWD", "4xWD", "3xWD",
+                "5xH1", "4xH1", "3xH1",
+                "5xH2", "4xH2", "3xH2",
+                "5xH3", "4xH3", "3xH3",
+                "5xH4", "4xH4", "3xH4",
+                "5xL1", "4xL1", "3xL1",
+                "5xL2", "4xL2", "3xL2",
+                "5xL3", "4xL3", "3xL3",
+                "5xL4", "4xL4", "3xL4",
+                "5xL5", "4xL5", "3xL5",
+            };
+
             List<PayItemStats> list = new List<PayItemStats>();
 
             var sortedDict = gameStatsModel.PayoutReasonStats.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-            foreach (var entry in sortedDict)
+            foreach (var key in rowHeaders)
             {
-                decimal rtp = (decimal)entry.Value.TotalWin/(10* gameStatsModel.TotalWagerCycle);
-                var currentItem = new PayItemStats() { Name = entry.Key, Hits = entry.Value.Hits, Rtp = rtp };
+                var current = gameStatsModel.PayoutReasonStats[key];
+                decimal rtp = (decimal)current.TotalWin / (10 * gameStatsModel.TotalWagerCycle);
+                var currentItem = new PayItemStats() { Name = key, Hits = current.Hits, Rtp = rtp };
                 list.Add(currentItem);
             }
 

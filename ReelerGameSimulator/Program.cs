@@ -4,11 +4,9 @@ using ReelerGameSimulator.Stats.Models;
 using SimulatorLib.DataOutput;
 using System.Text.Json;
 
-int NumTask = 10;
-int TotalCycle = 1000_000_000;
-int CyclePerTask = TotalCycle / NumTask;
+int NumBatch = 12;
 
-Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $" totalCycles={TotalCycle:N0} in {NumTask} tasks");
+Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
 long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 #region game config
@@ -23,10 +21,10 @@ var gameConfig = new GameConfig(gameConfigData);
 #region game logic and stats tasks
 var tasks = new List<Task<GameStatsModel>>();
 
-for (int i = 0; i < NumTask; i++)
+for (int batchId = 0; batchId < NumBatch; batchId++)
 {
-    int copy = i;
-    var worker = new GameSimulationTask(gameConfig, copy, CyclePerTask);
+    int copy = batchId;
+    var worker = new GameSimulationTask(gameConfig, copy, NumBatch);
     tasks.Add(Task.Run(() => worker.Run()));
 }
 
@@ -36,7 +34,7 @@ GameStatsModel[] taskResults = await Task.WhenAll(tasks);
 
 #region merge and output stats results
 GameStatsModel totalStats = new GameStatsModel();
-for (int i = 1; i < taskResults.Length; i++)
+for (int i = 0; i < NumBatch; i++)
 {
     var current = taskResults[i];
     totalStats.TotalWagerCycle += current.TotalWagerCycle;
@@ -54,7 +52,7 @@ for (int i = 1; i < taskResults.Length; i++)
     }
 }
 
-DataWriter.ShowGamePlayStats(totalStats);
+DataWriterUtility.ShowGamePlayStats(totalStats);
 #endregion
 
 Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime);
