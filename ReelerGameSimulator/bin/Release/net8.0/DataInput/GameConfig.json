@@ -1,0 +1,605 @@
+{
+  "Bet": {
+    "ProfileType": "FixedPaylineCost",
+    "NumPaylines": 20,
+    "Multiplier": 10
+  },
+  "Effects": [
+    {
+      "Name": "Add8FS",
+      "Type": "AddFreeSpins",
+      "Data": {
+        "Stage": "FreeSpins",
+        "Amount": 8
+      }
+    }
+  ],
+  "Achievements": [],
+  "PurchaseOptions": [],
+  "Features": {
+    "EnablePurchase": false,
+    "EnablePersistenceProtection": true,
+    "IsEngineOnly": false
+  },
+  "LogicStateTypes": [ { "Type": "StageValues" } ],
+  "GameStages": [
+    {
+      "Name": "BaseGame",
+      "Priority": 0,
+      "State": "BaseGame",
+      "LogicStateType": "StageValues",
+      "Slot": {
+        "Displays": [ "BaseRS11" ],
+        "DisplaySelectionMode": "Random",
+        "DefaultDisplay": "BaseRS11",
+        "DefaultDisplayResult": [ "H3", "L5", "L2", "H1", "L4", "H3", "L5", "L2", "H1", "L4", "H3", "L5", "L2", "H1", "L4" ],
+        "Columns": 5,
+        "Rows": 3,
+        "PayoutProcessor": "Default"
+      }
+    },
+    {
+      "Name": "FreeSpins",
+      "Priority": 1,
+      "State": "FreeSpin",
+      "Slot": {
+        "Displays": [ "BaseRS11" ],
+        "DisplaySelectionMode": "Random",
+        "DefaultDisplay": "BaseRS11",
+        "DefaultDisplayResult": [ "H3", "L5", "L2", "H1", "L4", "H3", "L5", "L2", "H1", "L4", "H3", "L5", "L2", "H1", "L4" ],
+        "Columns": 5,
+        "Rows": 3,
+        "PayoutProcessor": "Default"
+      }
+    },
+    {
+      "Name": "JackpotBonus",
+      "Priority": 2,
+      "State": "Bonus",
+      "Bonus": { "Name": "JackpotBonus" }
+    }
+  ],
+  "Bonus": [
+    {
+      "Name": "JackpotBonus",
+      "Type": "JackpotBonus",
+      "Config": {
+        "JPNamesAndIndexes": [ "MEGA", "MAJOR", "MINOR", "MAXI", "MINI" ],
+        "JPWeights": [
+          {
+            "Key": "Bonus_NoBoost",
+            "Weights": [ 200, 700, 46100, 223000, 730000 ]
+          },
+          {
+            "Key": "Bonus_Boost_M12",
+            "Weights": [ 200, 200, 1000, 50000, 948600 ]
+          },
+          {
+            "Key": "Bonus_Boost",
+            "Weights": [ 200, 700, 46100, 223000, 730000 ]
+          }
+        ],
+        "JPBoostMinimumGameMode": 2,
+        "JPWheelWeightedTableAtGameLevelIndex": [ "Bonus_NoBoost", "Bonus_NoBoost", "Bonus_Boost_M12", "Bonus_Boost", "Bonus_Boost", "Bonus_Boost", "Bonus_Boost", "Bonus_Boost" ],
+        "JackpotBootWeightTable": {
+          "Name": "Bonus_JackpotBoot",
+          "Choices": [ "Hit", "Miss" ],
+          "Weights": [ 1, 1 ]
+        },
+        "JPPrizeAtJackpotIndexAtBoostLevel": [
+          [ 1250, 2500, 3750, 6250 ],
+          [ 125, 250, 375, 500, 625, 875 ],
+          [ 25, 50, 75, 100, 125, 175 ],
+          [ 10, 20, 30, 40, 50, 70 ],
+          [ 5, 10, 15, 20, 25, 35 ]
+        ],
+        "Comment_boost_level": "level 0 is no boost jackpot value, can boost to max if boost is enabled"
+      }
+    }
+  ],
+  "Symbols": [
+    {
+      "Id": 0,
+      "Name": "WD",
+      "Flags": [ "Wild" ]
+    },
+    {
+      "Id": 1,
+      "Name": "H1",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 2,
+      "Name": "H2",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 3,
+      "Name": "H3",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 4,
+      "Name": "H4",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 5,
+      "Name": "L1",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 6,
+      "Name": "L2",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 7,
+      "Name": "L3",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 8,
+      "Name": "L4",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 9,
+      "Name": "L5",
+      "Flags": [ "WildSubstitutable" ]
+    },
+    {
+      "Id": 10,
+      "Name": "SC",
+      "Flags": [ "Scatter" ]
+    },
+    {
+      "Id": 11,
+      "Name": "RS",
+      "Flags": [ "None" ]
+    },
+    {
+      "Id": 12,
+      "Name": "IW",
+      "Flags": [ "None" ]
+    },
+    {
+      "Id": 13,
+      "Name": "CN",
+      "Flags": [ "None" ]
+    },
+    {
+      "Id": 14,
+      "Name": "RE",
+      "Flags": [ "None" ]
+    },
+    {
+      "Id": 15,
+      "Name": "NA",
+      "Flags": [ "None" ]
+    }
+  ],
+  "Displays": [
+    {
+      "Name": "BaseRS11",
+      "SymbolSets": [ "BaseRS11R0", "BaseRS11R1", "BaseRS11R2", "BaseRS11R3", "BaseRS11R4" ],
+      "Columns": 5,
+      "Rows":  3
+    }
+  ],
+  "SymbolSets": [
+    {
+      "Name": "BaseRS11R0",
+      "Type": "ReelStrip",
+      "Symbols": [ "H2", "L1", "H3", "L1", "H2", "L3", "L5", "L3", "H4", "L4", "L2", "H1", "L3", "L3", "L1", "L3", "L2", "L3", "H4", "H1", "L5", "SC", "L2", "L1", "RS", "H3", "L2", "WD", "L2", "H3", "L3", "L2", "L4", "WD", "H2", "L2" ]
+    },
+    {
+      "Name": "BaseRS11R1",
+      "Type": "ReelStrip",
+      "Symbols": [ "H4", "L4", "RS", "L4", "H1", "L1", "H3", "L1", "H2", "H4", "L1", "H4", "L4", "L5", "H4", "L4", "L5", "L1", "H3", "WD", "H4", "L1", "H3", "L4", "L5", "H4", "L2", "L1", "L4", "L1", "H4", "SC", "H2", "L3", "L5", "L1", "L5", "L2", "L5", "L3", "H4", "WD" ]
+    },
+    {
+      "Name": "BaseRS11R2",
+      "Type": "ReelStrip",
+      "Symbols": [ "H2", "H3", "L2", "RS", "L3", "L1", "L3", "H2", "H1", "L2", "L1", "H1", "H2", "H1", "H1", "H3", "H3", "H2", "L1", "SC", "H4", "H1", "H1", "L1", "WD", "H4", "H3", "WD", "H3" ]
+    },
+    {
+      "Name": "BaseRS11R3",
+      "Type": "ReelStrip",
+      "Symbols": [ "L2", "H4", "L2", "L4", "L1", "L3", "L1", "SC", "H1", "H4", "L2", "H4", "H3", "RS", "H4", "L5", "L4", "H2", "L5", "L4", "L1", "L4", "H3", "L2", "L4", "H1", "L4", "H2", "L4", "L5", "H2", "WD", "H1", "L3", "WD", "L2", "L1", "L4", "H2", "L1", "L5", "L1", "L2", "H1", "L2", "H3" ]
+    },
+    {
+      "Name": "BaseRS11R4",
+      "Type": "ReelStrip",
+      "Symbols": [ "L3", "H3", "L5", "H1", "L2", "H3", "H4", "L3", "L2", "H1", "H2", "H4", "H2", "L5", "H2", "RS", "L5", "L3", "H3", "L4", "H3", "L4", "H3", "WD", "L1", "L3", "L1", "L4", "SC", "L1", "L4", "H3", "L3", "L5", "L4", "H1", "L2", "L4", "L2", "WD", "L2", "L1", "L2", "L5", "H4", "H2", "H4", "L1", "L3", "H4", "L5", "H4" ]
+    }
+  ],
+  "PayoutProcessors": [
+    {
+      "Name": "Default",
+      "PayTable": "Default",
+      "ScatterIndexes": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ],
+      "Lines": [
+        [ 5, 6, 7, 8, 9 ],
+        [ 0, 1, 2, 3, 4 ],
+        [ 10, 11, 12, 13, 14 ],
+        [ 0, 6, 12, 8, 4 ],
+        [ 10, 6, 2, 8, 14 ],
+        [ 0, 1, 7, 3, 4 ],
+        [ 10, 11, 7, 13, 14 ],
+        [ 5, 11, 12, 13, 9 ],
+        [ 5, 1, 2, 3, 9 ],
+        [ 5, 6, 2, 8, 9 ],
+        [ 5, 6, 12, 8, 9 ],
+        [ 0, 6, 7, 8, 4 ],
+        [ 10, 6, 7, 8, 14 ],
+        [ 5, 11, 7, 13, 9 ],
+        [ 5, 1, 7, 3, 9 ],
+        [ 0, 6, 2, 8, 4 ],
+        [ 10, 6, 12, 8, 14 ],
+        [ 10, 1, 12, 3, 14 ],
+        [ 0, 11, 2, 13, 4 ],
+        [ 5, 1, 12, 3, 9 ]
+      ]
+    },
+    {
+      "Name": "None",
+      "PayTable": "None"
+    }
+  ],
+  "PayTables": [
+    {
+      "Name": "Default",
+      "Groups": [
+        {
+          "PayoutType": "BaseBet",
+          "Direction": "LTR",
+          "Sort": "HighestPayout",
+          "Type": "Payline",
+          "Entries": [
+            {
+              "Id": 0,
+              "Symbol": "WD",
+              "Count": 5,
+              "Payout": 300
+            },
+            {
+              "Id": 1,
+              "Symbol": "WD",
+              "Count": 4,
+              "Payout": 25
+            },
+            {
+              "Id": 2,
+              "Symbol": "WD",
+              "Count": 3,
+              "Payout": 4
+            },
+            {
+              "Id": 3,
+              "Symbol": "H1",
+              "Count": 5,
+              "Payout": 75
+            },
+            {
+              "Id": 4,
+              "Symbol": "H1",
+              "Count": 4,
+              "Payout": 25
+            },
+            {
+              "Id": 5,
+              "Symbol": "H1",
+              "Count": 3,
+              "Payout": 4
+            },
+            {
+              "Id": 6,
+              "Symbol": "H2",
+              "Count": 5,
+              "Payout": 50
+            },
+            {
+              "Id": 7,
+              "Symbol": "H2",
+              "Count": 4,
+              "Payout": 12
+            },
+            {
+              "Id": 8,
+              "Symbol": "H2",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 9,
+              "Symbol": "H3",
+              "Count": 5,
+              "Payout": 50
+            },
+            {
+              "Id": 10,
+              "Symbol": "H3",
+              "Count": 4,
+              "Payout": 12
+            },
+            {
+              "Id": 11,
+              "Symbol": "H3",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 12,
+              "Symbol": "H4",
+              "Count": 5,
+              "Payout": 50
+            },
+            {
+              "Id": 13,
+              "Symbol": "H4",
+              "Count": 4,
+              "Payout": 12
+            },
+            {
+              "Id": 14,
+              "Symbol": "H4",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 15,
+              "Symbol": "L1",
+              "Count": 5,
+              "Payout": 40
+            },
+            {
+              "Id": 16,
+              "Symbol": "L1",
+              "Count": 4,
+              "Payout": 7
+            },
+            {
+              "Id": 17,
+              "Symbol": "L1",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 18,
+              "Symbol": "L2",
+              "Count": 5,
+              "Payout": 25
+            },
+            {
+              "Id": 19,
+              "Symbol": "L2",
+              "Count": 4,
+              "Payout": 5
+            },
+            {
+              "Id": 20,
+              "Symbol": "L2",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 21,
+              "Symbol": "L3",
+              "Count": 5,
+              "Payout": 25
+            },
+            {
+              "Id": 22,
+              "Symbol": "L3",
+              "Count": 4,
+              "Payout": 5
+            },
+            {
+              "Id": 23,
+              "Symbol": "L3",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 24,
+              "Symbol": "L4",
+              "Count": 5,
+              "Payout": 25
+            },
+            {
+              "Id": 25,
+              "Symbol": "L4",
+              "Count": 4,
+              "Payout": 5
+            },
+            {
+              "Id": 26,
+              "Symbol": "L4",
+              "Count": 3,
+              "Payout": 2
+            },
+            {
+              "Id": 27,
+              "Symbol": "L5",
+              "Count": 5,
+              "Payout": 25
+            },
+            {
+              "Id": 28,
+              "Symbol": "L5",
+              "Count": 4,
+              "Payout": 5
+            },
+            {
+              "Id": 29,
+              "Symbol": "L5",
+              "Count": 3,
+              "Payout": 2
+            }
+          ]
+        },
+        {
+          "PayoutType": "TotalBet",
+          "Direction": "Anywhere",
+          "Sort": "HighestPayout",
+          "Type": "Scatter",
+          "Entries": [
+            {
+              "Id": 30,
+              "Symbol": "SC",
+              "Count": 5,
+              "Payout": 50
+            },
+            {
+              "Id": 31,
+              "Symbol": "SC",
+              "Count": 4,
+              "Payout": 5
+            },
+            {
+              "Id": 32,
+              "Symbol": "SC",
+              "Count": 3,
+              "Payout": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "None",
+      "Groups": []
+    }
+  ],
+  "Tokens": [
+    {
+      "Id": 0,
+      "Name": "IsRSToWild",
+      "DefaultValue": 0,
+      "ShowDefaultValue": false,
+      "Visibility": "Visible",
+      "Reset": "Manual"
+    },
+    {
+      "Id": 1,
+      "Name": "IsRSToScatter",
+      "DefaultValue": 0,
+      "ShowDefaultValue": false,
+      "Visibility": "Visible",
+      "Reset": "Manual"
+    }
+  ],
+  "InGameProgress": [
+    {
+      "Name": "PossibleLineWinWithRS",
+      "Visibility": "Hidden",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "GameStatsData",
+      "Visibility": "Hidden",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "RSPositions",
+      "Visibility": "Visible",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "RStoCollects",
+      "Visibility": "Visible",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "R1Coins",
+      "Visibility": "Hidden",
+      "DefaultValue": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "R2Coins",
+      "Visibility": "Hidden",
+      "DefaultValue": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    },
+    {
+      "Name": "R3Coins",
+      "Visibility": "Hidden",
+      "DefaultValue": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+      "ShowDefaultValue": false,
+      "Reset": "Manual"
+    }
+  ],
+  "Logic": {
+    "JackpotConfigs": [
+      {
+        "Name": "MEGA",
+        "Value": 1250
+      },
+      {
+        "Name": "MAJOR",
+        "Value": 125
+      },
+      {
+        "Name": "MINOR",
+        "Value": 25
+      },
+      {
+        "Name": "MAXI",
+        "Value": 10
+      },
+      {
+        "Name": "MINI",
+        "Value": 5
+      }
+    ],
+
+    "RSToWilds": {
+      "Name": "RSToWilds",
+      "Choices": [ "Hit", "Miss" ],
+      "Weights": [ 80, 20 ]
+    },
+
+    "RStoWildsProbAtNumRS": [ 0.75, 0.75, 0.75 ],
+    "RStoScattersProbAtNumRS": [ 0.75, 0.75, 0.75 ],
+
+    "RSReplacementWTAtPossibleCollectWin": {
+      "Name": "PossibleInstantWinWT",
+      "Choices": [ "Hit", "Miss" ],
+      "Weights": [ 20, 80 ]
+    },
+
+    "NumberOfCoins": {
+      "Name": "NumberOfCoins",
+      "Choices": [ 2, 3, 4, 5 ],
+      "Weights": [ 1, 1, 1, 3 ]
+    },
+
+    "CoinPrizeWT": {
+      "Name": "CoinPrizeWT",
+      "Choices": [ 0.2, 0.5, 0.8, 1, 1.2, 1.5, 2 ],
+      "Weights": [ 75000, 3000, 3000, 3000, 3000, 3000, 10000 ]
+    },
+
+    "CoinDistributionAtRSPositions": {
+      "1": [ 9, 0, 9, 8, 7, 9, 9, 9, 8, 7, 8, 8, 8, 8, 7 ],
+      "2": [ 8, 9, 0, 9, 8, 8, 9, 9, 9, 8, 8, 8, 8, 8, 8 ],
+      "3": [ 7, 8, 9, 0, 9, 7, 8, 9, 9, 9, 7, 8, 8, 8, 8 ],
+
+      "6": [ 9, 9, 9, 8, 7, 9, 0, 9, 8, 7, 9, 9, 9, 8, 7 ],
+      "7": [ 8, 9, 9, 9, 8, 8, 9, 0, 9, 8, 8, 9, 9, 9, 8 ],
+      "8": [ 7, 8, 9, 9, 9, 7, 8, 9, 0, 9, 7, 8, 9, 9, 9 ],
+
+      "11": [ 8, 8, 8, 8, 7, 9, 9, 9, 8, 7, 9, 0, 9, 8, 7 ],
+      "12": [ 8, 8, 8, 8, 8, 8, 9, 9, 9, 8, 8, 9, 0, 9, 8 ],
+      "13": [ 7, 8, 8, 8, 8, 7, 8, 9, 9, 9, 7, 8, 9, 0, 9 ]
+    }
+  }
+}

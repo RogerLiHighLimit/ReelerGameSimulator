@@ -7,17 +7,17 @@ namespace ReelerGameSimulator
 {
     public class GameSimulationTask
     {
+        private const int Batches = 10;
+
         private readonly GameConfig _gameConfig;
         private readonly int _taskId;
-        private readonly int _cyclePerTask;
-        private readonly int _cycleReport;
+        private readonly int _batchCycles;
 
-        public GameSimulationTask(GameConfig gameConfig, int taskId, int cyclePerTask, int cycleReport)
+        public GameSimulationTask(GameConfig gameConfig, int taskId, int cyclePerTask)
         {
             _gameConfig = gameConfig;
             _taskId = taskId;
-            _cyclePerTask = cyclePerTask;
-            _cycleReport = cycleReport;
+            _batchCycles = cyclePerTask/Batches;
         }
 
         public GameStatsModel Run()
@@ -25,17 +25,21 @@ namespace ReelerGameSimulator
             GameLogic gameLogic = new GameLogic(_gameConfig);
             GameStats gameStats = new GameStats();
 
-            for (int j = 0; j < _cyclePerTask; j++)
+            for (int i = 1; i <= Batches; i++)
             {
-                gameLogic.InitialGameState();
-                gameLogic.ProcessEvent();
-
-                if (_taskId == 0 && (j % _cycleReport) == 0 && j != 0)
+                for (int j = 1; j <= _batchCycles; j++)
                 {
-                    Console.WriteLine($"Task {j * 100 / _cyclePerTask}% complete at {DateTimeOffset.UtcNow.LocalDateTime}");
+                    gameLogic.InitialGameState();
+                    gameLogic.ProcessEvent();
+
+                    gameStats.StatsEvent(gameLogic.GameState);
                 }
 
-                gameStats.StatsEvent(gameLogic.GameState);
+                if (_taskId == 0)
+                {
+                    // batch report
+                    Console.WriteLine($"Task {i * Batches}% complete at {DateTimeOffset.UtcNow.LocalDateTime}");
+                }
             }
 
             return gameStats.GameStatsModel;

@@ -7,10 +7,8 @@ using System.Text.Json;
 int NumTask = 10;
 int TotalCycle = 1000_000_000;
 int CyclePerTask = TotalCycle / NumTask;
-int ReportPercentage = 10;
-int CycleReport = CyclePerTask/ ReportPercentage;
 
-Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $"_cycles={TotalCycle:N0}");
+Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $" totalCycles={TotalCycle:N0} in {NumTask} tasks");
 long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 #region game config
@@ -28,7 +26,7 @@ var tasks = new List<Task<GameStatsModel>>();
 for (int i = 0; i < NumTask; i++)
 {
     int copy = i;
-    var worker = new GameSimulationTask(gameConfig, copy, CyclePerTask, CycleReport);
+    var worker = new GameSimulationTask(gameConfig, copy, CyclePerTask);
     tasks.Add(Task.Run(() => worker.Run()));
 }
 
