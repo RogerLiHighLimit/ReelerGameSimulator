@@ -8,7 +8,8 @@ namespace ReelerGameSimulator.Logic.Model
         public DisplayConfig DisplayConfig { get; internal set; } = new DisplayConfig();
         public PayoutProcessorConfig PayoutProcessorConfig { get; internal set; } = new PayoutProcessorConfig();
         public PayTableConfig PayTableConfig { get; internal set; } = new PayTableConfig();
-        public SymbolConfig WildSymbol { get; internal set; } = new SymbolConfig(); // roger pending
+        public SymbolConfig WildSymbol { get; internal set; } = new SymbolConfig(); 
+        public SymbolConfig ScatterSymbol { get; internal set; } = new SymbolConfig();
 
         public PayTableGroupConfig PaytableLines => PayTableConfig.Groups[PayTableType.Payline];
         public PayTableGroupConfig PaytableScatter => PayTableConfig.Groups[PayTableType.Scatter];

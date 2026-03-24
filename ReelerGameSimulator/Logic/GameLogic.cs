@@ -25,7 +25,11 @@ namespace ReelerGameSimulator.Logic
                 if (entry.Value.IsWild)
                 {
                     EventConfig.WildSymbol = entry.Value;
-                    break;
+                }
+
+                if (entry.Value.IsScatter)
+                {
+                    EventConfig.ScatterSymbol = entry.Value;
                 }
             }
         }
@@ -60,6 +64,12 @@ namespace ReelerGameSimulator.Logic
             if (linePays.Count > 0)
             {
                 GameState.Payouts.AddRange(linePays);
+            }
+
+            var scatterPays = GameLogicUtility.MatchScatterWins(GameState, GameConfig);
+            if (scatterPays.Count > 0)
+            {
+                GameState.Payouts.AddRange(scatterPays);
             }
         }
 

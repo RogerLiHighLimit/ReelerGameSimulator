@@ -8,7 +8,7 @@ namespace SimulatorLib.DataOutput
     {
         public static void ShowGamePlayStats(GameStatsModel gameStatsModel)
         {
-            List<string> rowHeaders = new List<string>() {
+            List<string> rowHeaders = [
                 "5xWD", "4xWD", "3xWD",
                 "5xH1", "4xH1", "3xH1",
                 "5xH2", "4xH2", "3xH2",
@@ -19,11 +19,11 @@ namespace SimulatorLib.DataOutput
                 "5xL3", "4xL3", "3xL3",
                 "5xL4", "4xL4", "3xL4",
                 "5xL5", "4xL5", "3xL5",
-            };
+                "5xSC", "4xSC", "3xSC",
+            ];
 
-            List<PayItemStats> list = new List<PayItemStats>();
+            List<PayItemStats> list = [];
 
-            var sortedDict = gameStatsModel.PayoutReasonStats.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             foreach (var key in rowHeaders)
             {
                 var current = gameStatsModel.PayoutReasonStats[key];

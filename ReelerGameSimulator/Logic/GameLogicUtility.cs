@@ -117,7 +117,7 @@ namespace ReelerGameSimulator.Logic
 
                 if (paytable.ContainsKey(LineSymbolsString))
                 {
-                    PayoutResult newResult = new PayoutResult(paytable[LineSymbolsString], Config.Data.PayTableType.Payline, 1, lineId, string.Join(",", currentLineDef), lineIndexes, numWild);
+                    PayoutResult newResult = new PayoutResult(paytable[LineSymbolsString], PayTableType.Payline, 1, lineId, string.Join(",", currentLineDef), lineIndexes, numWild);
                     result.Add(newResult); 
                 }
             }
@@ -125,13 +125,34 @@ namespace ReelerGameSimulator.Logic
             return result;
         }
 
+        internal static List<PayoutResult> MatchScatterWins(GameState st, GameConfig config)
+        {
+            List<PayoutResult> result = new List<PayoutResult>();
+
+            var scatterItems = st.Display.Symbols.Where(x => x.Symbol.Name == st.EventState.ScatterSymbol.Name);
+            if (scatterItems != null)
+            {
+                var scatters = scatterItems.Select(y => y.Symbol.Name).ToList();
+                string scatterPay = string.Join(",", scatters);
+                var paytable = st.EventState.PaytableScatter.Entries;
+                if (paytable.ContainsKey(scatterPay))
+                {
+                    var scatterIndexes = scatterItems.Select(y => y.Index).ToList();
+                    PayoutResult newResult = new PayoutResult(paytable[scatterPay], PayTableType.Scatter, 1, paytable[scatterPay].Id, string.Join(",", st.EventState.PayoutProcessorConfig.ScatterIndexes), scatterIndexes, 0);
+                    result.Add(newResult);
+                }
+            }
+
+
+            return result;
+        }
+
         internal static long CalculatePayoutAmount(GameState gameState, GameConfig gameConfig, PayoutResult pay)
         {
-            long totalAmount = 0;
-
             if (pay.Amount < 0M)
                 throw new GameLogicException(string.Format("Invalid payout amount: {0}.", pay.Amount));
 
+            long totalAmount;
             switch (pay.Type)
             {
                 case PayTableType.Payline:
@@ -139,10 +160,15 @@ namespace ReelerGameSimulator.Logic
                     totalAmount = ConvertDecimalToLongSafely(amountDecimal);
                     break;
 
+                case PayTableType.Scatter:
+                    amountDecimal = pay.Amount * gameState.EventFinancials.Wager / gameConfig.BetConfig.Multiplier;
+                    totalAmount = ConvertDecimalToLongSafely(amountDecimal);
+                    break;
+
                 default:
                     throw new GameLogicException($"Pay table type: {pay.Type}");
             }
-                        
+
             return totalAmount;
         }
 
