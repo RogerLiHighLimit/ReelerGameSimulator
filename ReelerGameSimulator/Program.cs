@@ -5,7 +5,7 @@ using SimulatorLib.DataOutput;
 using System.Text.Json;
 
 int NumTask = 10;
-int TotalCycle = 1000_000_000;
+int TotalCycle = 10_000_000;
 int CyclePerTask = TotalCycle / NumTask;
 
 Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $" totalCycles={TotalCycle:N0} in {NumTask} tasks");
