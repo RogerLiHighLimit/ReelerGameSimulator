@@ -1,7 +1,8 @@
-﻿using ReelerGameSimulator;
-using ReelerGameSimulator.Config;
-using ReelerGameSimulator.Stats.Models;
-using SimulatorLib.DataOutput;
+﻿using ReelerGameSimulator.AnvilMock.Slot.Engine.Configuration;
+using ReelerGameSimulator.AnvilMock.Slot.Engine.Configuration.Data;
+using ReelerGameSimulator.AnvilPlugInMock;
+using ReelerGameSimulator.AnvilPlugInMock.Stats.Models;
+using ReelerGameSimulator.AnvilSimulatorMock;
 using System.Text.Json;
 
 int NumTask = 10;
@@ -12,12 +13,12 @@ Console.WriteLine(DateTimeOffset.UtcNow.LocalDateTime + $" totalCycles={TotalCyc
 long timeStart = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
 #region game config
-string json = File.ReadAllText("DataInput//GameConfig.json");
-var gameConfigData = JsonSerializer.Deserialize<GameConfigData>(json);
+string json = File.ReadAllText("AnvilServiceMock//Data//GameConfig.json");
+var gameConfigData = JsonSerializer.Deserialize<EngineConfigurationData>(json);
 if (gameConfigData == null)
     return;
 
-var gameConfig = new GameConfig(gameConfigData);
+var gameConfig = new EngineConfiguration(gameConfigData);
 #endregion
 
 #region game logic and stats tasks
@@ -26,7 +27,7 @@ var tasks = new List<Task<GameStatsModel>>();
 for (int i = 0; i < NumTask; i++)
 {
     int copy = i;
-    var worker = new GameSimulationTask(gameConfig, copy, CyclePerTask);
+    var worker = new TaskGamesSimulation(gameConfig, copy, CyclePerTask);
     tasks.Add(Task.Run(() => worker.Run()));
 }
 
